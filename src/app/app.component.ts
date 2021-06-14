@@ -33,26 +33,28 @@ export class AppComponent {
   }
 
   getData(response: Array<CityGroup>) {
+    let aqi: number;
     let isFind: boolean;
     let colorClass: string;
     for (let i=0; i < response.length; i++) {
       isFind = false;
-      colorClass = this.getColorClass(response[i].aqi);
-      this.logCityAqiArray.push({city: response[i].city, aqi: response[i].aqi, timestamp: new Date(), class: colorClass});
+      aqi = Math.round(response[i].aqi * 100) / 100;
+      colorClass = this.getColorClass(aqi);
+      this.logCityAqiArray.push({city: response[i].city, aqi: aqi, timestamp: new Date(), class: colorClass});
       if (this.showCity && this.singleCityAqiArray.length > 0 && this.singleCityAqiArray[0].city === response[i].city) {
-        this.singleCityAqiArray.push({city: response[i].city, aqi: response[i].aqi, timestamp: new Date(), class: colorClass});
+        this.singleCityAqiArray.push({city: response[i].city, aqi: aqi, timestamp: new Date(), class: colorClass});
         this.drawChart();
       }
       for (let j = 0; j < this.cityAqiArray.length; j++) {
         if (this.cityAqiArray[j].city === response[i].city) {
           isFind = true;
-          this.cityAqiArray[j].aqi = response[i].aqi;
+          this.cityAqiArray[j].aqi = aqi;
           this.cityAqiArray[j].lastUpdated = new Date();
           this.cityAqiArray[j].class = colorClass;
         }
       }
       if (!isFind) {
-        this.cityAqiArray.push({city: response[i].city, aqi: response[i].aqi, lastUpdated: new Date(), class: colorClass});
+        this.cityAqiArray.push({city: response[i].city, aqi: aqi, lastUpdated: new Date(), class: colorClass});
       }
     }
   }
