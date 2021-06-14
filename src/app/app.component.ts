@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { webSocket } from 'rxjs/webSocket';
 import { environment } from '../environments/environment';
 const subject = webSocket(environment.wsEndpoint);
+import { Chart} from 'angular-highcharts';
 
 export interface CityGroup {
   city: string;
@@ -18,6 +19,7 @@ export interface CityGroup {
 })
 export class AppComponent {
   showCity = false;
+  chart: Chart;
   title = 'aqi-quality-check';
   logCityAqiArray: Array<CityGroup> = [];
   cityAqiArray: Array<CityGroup> = [];
@@ -36,7 +38,11 @@ export class AppComponent {
     for (let i=0; i < response.length; i++) {
       isFind = false;
       colorClass = this.getColorClass(response[i].aqi);
-      this.logCityAqiArray.push({city: response[i].city, aqi: response[i].aqi, timestamp: new Date()});
+      this.logCityAqiArray.push({city: response[i].city, aqi: response[i].aqi, timestamp: new Date(), class: colorClass});
+      if (this.showCity && this.singleCityAqiArray.length > 0 && this.singleCityAqiArray[0].city === response[i].city) {
+        this.singleCityAqiArray.push({city: response[i].city, aqi: response[i].aqi, timestamp: new Date(), class: colorClass});
+        this.drawChart();
+      }
       for (let j = 0; j < this.cityAqiArray.length; j++) {
         if (this.cityAqiArray[j].city === response[i].city) {
           isFind = true;
@@ -49,7 +55,6 @@ export class AppComponent {
         this.cityAqiArray.push({city: response[i].city, aqi: response[i].aqi, lastUpdated: new Date(), class: colorClass});
       }
     }
-    console.log(this.cityAqiArray, this.logCityAqiArray)
   }
 
   getColorClass(aqi: number) {
@@ -75,10 +80,41 @@ export class AppComponent {
     this.singleCityAqiArray = [];
     for (let i = 0; i < this.logCityAqiArray.length; i++) {
       if (this.logCityAqiArray[i].city === city) {
-        console.log(city)
         this.singleCityAqiArray.push({city: this.logCityAqiArray[i].city, aqi: this.logCityAqiArray[i].aqi, timestamp: this.logCityAqiArray[i].timestamp, class: this.logCityAqiArray[i].class});
       }
     }
+    this.drawChart();
+  }
+
+  drawChart() {
+    this.chart = new Chart({
+      chart: {
+        type: 'line'
+      },
+      title: {
+        text: 'Aqi Quality'
+      },
+      credits: {
+        enabled: false
+      },
+      xAxis: {
+        type: 'datetime',
+        categories: this.singleCityAqiArray.map(e => e.timestamp.toISOString())
+      },
+      yAxis:{
+        min:30,
+        max:500,
+        title: {
+          text: "AQI Index"
+        },
+        gridLineWidth: 0      
+      },
+      series: [{
+        name: this.singleCityAqiArray[0].city,
+        type: 'line',
+        data: this.singleCityAqiArray.map(e => e.aqi)
+      }]
+    });
   }
     
 }

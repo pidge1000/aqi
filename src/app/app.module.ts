@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { ChartModule } from 'angular-highcharts';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { DateAgoPipe } from './pipes/date-ago.pipe';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ChartModule
   ],
   providers: [],
   bootstrap: [AppComponent]

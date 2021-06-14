@@ -16,6 +16,8 @@
 <br /><br /><br />
 <div *ngIf="showCity">
   <center><h2>Historical Data of {{ singleCityAqiArray[0].city }}</h2></center>
+  <div [chart]="chart"></div>
+  <br /><br /><br /><br />
   <table id="t01">
     <tr>
       <th>City</th>
