@@ -1,21 +1,24 @@
-<table id="t01">
-  <tr>
-    <th>City</th>
-    <th>AQI</th> 
-    <th>Last Updated</th>
-    <th></th>
-  </tr>
-  <tr *ngFor="let row of cityAqiArray;">
-    <td>{{ row.city }}</td>
-    <td class="{{ row.class }}">{{ row.aqi }}</td>
-    <td>{{ row.lastUpdated | dateAgo}}</td>
-    <td><a href="javascript: void(0)" (click)="showMore(row.city)">show more</a></td>
-  </tr>
-</table>
+<div>
+  <h2 style="text-align: center;">Live AQI Quality Index</h2>
+  <table id="t01">
+    <tr>
+      <th>City</th>
+      <th>AQI</th> 
+      <th>Last Updated</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let row of cityAqiArray;">
+      <td>{{ row.city }}</td>
+      <td class="{{ row.class }}">{{ row.aqi }}</td>
+      <td>{{ row.lastUpdated | dateAgo}}</td>
+      <td><a href="javascript: void(0)" (click)="showMore(row.city)">show more</a></td>
+    </tr>
+  </table>
+</div>
 
 <br /><br /><br />
 <div *ngIf="showCity">
-  <center><h2>Historical Data of {{ singleCityAqiArray[0].city }}</h2></center>
+  <h2 style="text-align: center;">Historical Data of {{ singleCityAqiArray[0].city }}</h2>
   <div [chart]="chart"></div>
   <br /><br /><br /><br />
   <table id="t01">
