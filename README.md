@@ -19,3 +19,6 @@ Steps to run the project:
 2. npm install
 3. ng serve
 4. visit http://localhost:4200/ and see the magic :)
+
+
+Time Taken - ~3 hrs
